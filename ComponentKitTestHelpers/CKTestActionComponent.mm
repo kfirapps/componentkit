@@ -25,7 +25,7 @@
                            noArgumentBlock:(void (^)(CKComponent *sender))noArgumentBlock
                                  component:(CKComponent *)component
 {
-  CKTestActionComponent *c = [super newWithComponent:component];
+  CKTestActionComponent *c = [super newWithComponent:^{return component;}];
   if (c) {
     c->_block = singleArgumentBlock;
     c->_secondBlock = secondArgumentBlock;
@@ -38,7 +38,7 @@
 + (instancetype)newWithCppArgumentBlock:(void (^)(CKComponent *sender, std::vector<std::string> vec))block
                               component:(CKComponent *)component
 {
-  CKTestActionComponent *c = [super newWithComponent:component];
+  CKTestActionComponent *c = [super newWithComponent:^{ return component;}];
   if (c) {
     c->_cppArgumentBlock = block;
   }

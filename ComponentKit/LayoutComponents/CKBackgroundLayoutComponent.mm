@@ -21,16 +21,16 @@
   CKComponent *_background;
 }
 
-+ (instancetype)newWithComponent:(CKComponent *)component
-                      background:(CKComponent *)background
++ (instancetype)newWithComponent:(ComponentGenerator)component
+                      background:(ComponentGenerator)background
 {
   if (component == nil) {
     return nil;
   }
   CKBackgroundLayoutComponent *c = [super newWithView:{} size:{}];
   if (c) {
-    c->_component = component;
-    c->_background = background;
+    c->_component = component();
+    c->_background = background();
   }
   return c;
 }

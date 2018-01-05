@@ -19,10 +19,12 @@
                   attributes:(const CKViewComponentAttributeValueMap &)attributes
 {
   return [super newWithComponent:
-          [CKImageComponent
-           newWithImage:image
-           attributes:attributes
-           size:CKComponentSize::fromCGSize(image.size)]];
+          ^{ return
+            [CKImageComponent
+             newWithImage:image
+             attributes:attributes
+             size:CKComponentSize::fromCGSize(image.size)];}
+            ];
 }
 
 @end

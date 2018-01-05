@@ -102,12 +102,15 @@ static const CKSizeRange size = {{100, 100}, {100, 100}};
   CKComponent *subcomponent = [CKComponent newWithView:{} size:{50, 50}];
   CKNestedComponent *c =
   [super newWithComponent:
-   [CKStaticLayoutComponent
-    newWithView:{}
-    size:{100, 100}
-    children:{
-      {{25, 25}, subcomponent}
-    }]];
+   ^{ return
+     [CKStaticLayoutComponent
+      newWithView:{}
+      size:{100, 100}
+      children:{
+        {{25, 25}, subcomponent}
+      }];
+   }
+   ];
   c->_subcomponent = subcomponent;
   return c;
 }

@@ -41,6 +41,7 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 
   InteractiveQuoteComponent *c =
   [super newWithComponent:
+   ^{ return
    [CKFlexboxComponent
     newWithView:{
       [UIView class],
@@ -60,7 +61,8 @@ static NSString *const oscarWilde = @"Oscar Wilde";
           {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
         }
         size:{.height = 1/[UIScreen mainScreen].scale}]}
-    }]];
+    }];
+   }];
   if (c) {
     c->_overlay = overlay;
   }

@@ -14,13 +14,15 @@
 @implementation QuoteWithBackgroundComponent
 
 + (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage
-                        quoteComponent:(CKComponent *)quoteComponent
+                        quoteComponent:(ComponentGenerator)quoteComponent
 
 {
   return [super newWithComponent:
+          ^{ return
           [CKBackgroundLayoutComponent
            newWithComponent:quoteComponent
            background:
+           ^{ return
            [CKComponent
             newWithView:{
               [UIImageView class],
@@ -30,7 +32,7 @@
                 {@selector(setClipsToBounds:), @YES},
               }
             }
-            size:{}]]];
+            size:{}];}];}];
 }
 
 @end

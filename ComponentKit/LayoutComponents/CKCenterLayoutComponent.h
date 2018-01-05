@@ -43,7 +43,7 @@ typedef NS_OPTIONS(NSUInteger, CKCenterLayoutComponentSizingOptions) {
  */
 + (instancetype)newWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                           sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
-                                  child:(CKComponent *)child
+                                  child:(ComponentGenerator)child
                                    size:(const CKComponentSize &)size;
 
 @end

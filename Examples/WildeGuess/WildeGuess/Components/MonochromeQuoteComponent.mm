@@ -22,6 +22,7 @@
   [CKInsetComponent
    newWithInsets:{.top = 50, .left = 20, .bottom = 50, .right = 20}
    component:
+   ^{ return
    [CKLabelComponent
     newWithLabelAttributes:{
       .string = text,
@@ -32,7 +33,7 @@
       {@selector(setBackgroundColor:), [UIColor clearColor]},
       {@selector(setUserInteractionEnabled:), @NO},
     }
-    size:{ }]];
+    size:{ }];}];
 
   CKComponent *quoteTextWithBookmarkComponent =
   [CKFlexboxComponent
@@ -61,22 +62,26 @@
    }];
 
   return [super newWithComponent:
+          ^{ return
           [QuoteWithBackgroundComponent
            newWithBackgroundImage:[context imageNamed:@"Drops"]
            quoteComponent:
+           ^{ return
            [CKInsetComponent
             newWithInsets:{.top = 40, .bottom = 40}
             component:
+            ^{ return
             [CKBackgroundLayoutComponent
-             newWithComponent:quoteTextWithBookmarkComponent
+             newWithComponent:^{ return quoteTextWithBookmarkComponent;}
              background:
+             ^{ return
              // Add a translucent white background for the text.
              [CKComponent
               newWithView:{
                 [UIView class],
                 {{@selector(setBackgroundColor:), [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.7]}}
               }
-              size:{}]]]]];
+              size:{}];}];}];}];}];
 }
 
 @end

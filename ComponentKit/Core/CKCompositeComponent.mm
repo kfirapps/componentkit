@@ -41,12 +41,12 @@
 }
 #endif
 
-+ (instancetype)newWithComponent:(CKComponent *)component
++ (instancetype)newWithComponent:(ComponentGenerator)component
 {
   return [self newWithView:{} component:component];
 }
 
-+ (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(CKComponent *)component
++ (instancetype)newWithView:(const CKComponentViewConfiguration &)view component:(ComponentGenerator)component
 {
   if (!component) {
     return nil;
@@ -54,7 +54,7 @@
 
   CKCompositeComponent *c = [super newWithView:view size:{}];
   if (c) {
-    c->_component = component;
+    c->_component = component();
   }
   return c;
 }

@@ -111,11 +111,13 @@ static NSString *nameForInsets(UIEdgeInsets insets)
 + (instancetype)newWithComponent:(CKComponent *)component
 {
   return [super newWithComponent:
-          [CKBackgroundLayoutComponent
-                            newWithComponent:
-                            component
-                            background:
-           [CKInsetTestBlockComponent newWithColor:[UIColor grayColor] size:{}]]];
+          ^{ return
+            [CKBackgroundLayoutComponent
+             newWithComponent:
+             component
+             background:
+             [CKInsetTestBlockComponent newWithColor:[UIColor grayColor] size:{}]];
+          }];
 }
 
 @end
@@ -125,7 +127,9 @@ static NSString *nameForInsets(UIEdgeInsets insets)
 + (instancetype)newWithColor:(UIColor *)color size:(const CKComponentSize &)size
 {
   return [super newWithComponent:
-          [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), color}}} size:size]];
+          ^{ return
+            [CKComponent newWithView:{[UIView class], {{@selector(setBackgroundColor:), color}}} size:size];
+          }];
 }
 
 @end

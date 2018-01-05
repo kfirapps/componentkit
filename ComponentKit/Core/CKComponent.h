@@ -18,6 +18,8 @@
 #import <ComponentKit/CKComponentSize.h>
 #import <ComponentKit/CKComponentViewConfiguration.h>
 
+typedef CKComponent*(^ComponentGenerator)();
+
 struct CKComponentViewContext {
   __kindof UIView *view;
   CGRect frame;

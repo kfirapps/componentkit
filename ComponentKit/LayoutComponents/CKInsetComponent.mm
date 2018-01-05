@@ -44,14 +44,14 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
 
 @implementation CKInsetComponent
 
-+ (instancetype)newWithInsets:(UIEdgeInsets)insets component:(CKComponent *)component
++ (instancetype)newWithInsets:(UIEdgeInsets)insets component:(ComponentGenerator)component
 {
   return [self newWithView:{} insets:insets component:component];
 }
 
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                      insets:(UIEdgeInsets)insets
-                  component:(CKComponent *)component
+                  component:(ComponentGenerator)component
 {
   if (component == nil) {
     return nil;
@@ -59,7 +59,7 @@ static CGFloat centerInset(CGFloat outer, CGFloat inner)
   CKInsetComponent *c = [super newWithView:view size:{}];
   if (c) {
     c->_insets = insets;
-    c->_component = component;
+    c->_component = component();
   }
   return c;
 }

@@ -14,6 +14,6 @@
 @interface QuoteWithBackgroundComponent : CKCompositeComponent
 
 + (instancetype)newWithBackgroundImage:(UIImage *)backgroundImage
-                        quoteComponent:(CKComponent *)quoteComponent;
+                        quoteComponent:(ComponentGenerator)quoteComponent;
 
 @end

@@ -23,14 +23,14 @@
 
 + (instancetype)newWithCenteringOptions:(CKCenterLayoutComponentCenteringOptions)centeringOptions
                           sizingOptions:(CKCenterLayoutComponentSizingOptions)sizingOptions
-                                  child:(CKComponent *)child
+                                  child:(ComponentGenerator)child
                                    size:(const CKComponentSize &)size
 {
   CKCenterLayoutComponent *c = [super newWithView:{} size:size];
   if (c) {
     c->_centeringOptions = centeringOptions;
     c->_sizingOptions = sizingOptions;
-    c->_child = child;
+    c->_child = child();
   }
   return c;
 }

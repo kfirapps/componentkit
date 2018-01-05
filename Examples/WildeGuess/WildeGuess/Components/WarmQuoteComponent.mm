@@ -19,27 +19,32 @@
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
   return [super newWithComponent:
-          [QuoteWithBackgroundComponent
-           newWithBackgroundImage:[context imageNamed:@"Powell"]
-           quoteComponent:
-           [CKRatioLayoutComponent
-            newWithRatio:1.3
-            size:{}
-            component:
-            [CKInsetComponent
-             // Left and right inset of 30pts; centered vertically:
-             newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
-             component:
-             [CKLabelComponent
-              newWithLabelAttributes:{
-                .string = text,
-                .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
-              }
-              viewAttributes:{
-                {@selector(setBackgroundColor:), [UIColor clearColor]},
-                {@selector(setUserInteractionEnabled:), @NO},
-              }
-              size:{ }]]]]];
+          ^{ return
+            [QuoteWithBackgroundComponent
+             newWithBackgroundImage:[context imageNamed:@"Powell"]
+             quoteComponent:
+             ^{ return
+             [CKRatioLayoutComponent
+              newWithRatio:1.3
+              size:{}
+              component:
+              [CKInsetComponent
+               // Left and right inset of 30pts; centered vertically:
+               newWithInsets:{.left = 30, .right = 30, .top = INFINITY, .bottom = INFINITY}
+               component:
+               ^{ return
+               [CKLabelComponent
+                newWithLabelAttributes:{
+                  .string = text,
+                  .font = [UIFont fontWithName:@"AmericanTypewriter" size:26],
+                }
+                viewAttributes:{
+                  {@selector(setBackgroundColor:), [UIColor clearColor]},
+                  {@selector(setUserInteractionEnabled:), @NO},
+                }
+                size:{ }];}]];
+             }];
+          }];
 
 }
 

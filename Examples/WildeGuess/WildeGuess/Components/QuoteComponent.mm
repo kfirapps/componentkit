@@ -22,7 +22,10 @@
 
 + (instancetype)newWithQuote:(Quote *)quote context:(QuoteContext *)context
 {
-  return [super newWithComponent:quoteComponent(quote, context)];
+  return [super newWithComponent:
+          ^{ return
+            quoteComponent(quote, context);
+          }];
 }
 
 static CKComponent *quoteComponent(Quote *quote, QuoteContext *context)

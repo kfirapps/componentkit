@@ -20,7 +20,7 @@
         returns nil.
  @param background A child that is laid out behind it. May be nil, in which case the background is omitted.
  */
-+ (instancetype)newWithComponent:(CKComponent *)component
-                      background:(CKComponent *)background;
++ (instancetype)newWithComponent:(ComponentGenerator)component
+                      background:(ComponentGenerator)background;
 
 @end

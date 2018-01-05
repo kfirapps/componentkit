@@ -19,6 +19,25 @@
 #import "QuoteContext.h"
 #import "QuotesPage.h"
 
+#import <ComponentKit/CKBuildComponent.h>
+#import <ComponentKit/CKComponentKey.h>
+#import <ComponentKit/CKComponentScopeEnumeratorProvider.h>
+#import <ComponentKit/CKComponentScopeRootFactory.h>
+#import <ComponentKit/CKComponentSubclass.h>
+#import <ComponentKit/CKCompositeComponent.h>
+#import <ComponentKit/CKFlexboxComponent.h>
+#import <ComponentKit/CKComponentInternal.h>
+
+@interface CKFlexboxComponentWithDealloc : CKFlexboxComponent
+@end
+
+@implementation CKFlexboxComponentWithDealloc
+- (void)dealloc
+{
+  NSLog(@"[1] dealloc:%p",self);
+}
+@end
+
 @interface WildeGuessCollectionViewController () <CKComponentProvider, UICollectionViewDelegateFlowLayout>
 @end
 
@@ -69,7 +88,14 @@
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   [_dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
-  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:4]];
+  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:1000]];
+
+//  CKComponent *c = [self test_dealloc];
+//
+//  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//    CKComponentLayout layout = [c componentLayout];
+//    NSLog(@"layout.component:%@",layout.component);
+//  });
 }
 
 - (void)_enqueuePage:(QuotesPage *)quotesPage
@@ -137,6 +163,55 @@ static BOOL scrolledToBottomWithBuffer(CGPoint contentOffset, CGSize contentSize
   const CGFloat maxVisibleY = (contentOffset.y + bounds.size.height);
   const CGFloat actualMaxY = (contentSize.height + contentInset.bottom);
   return ((maxVisibleY + buffer) >= actualMaxY);
+}
+
+- (CKComponent *)test_dealloc
+{
+  CKFlexboxComponent __block *flexbox = nil;
+
+  CKComponent *(^block)(void) = ^CKComponent *{
+
+    flexbox = [CKFlexboxComponentWithDealloc
+               newWithView:{}
+               size:{
+                 .width = 300,
+                 .height = 300,
+               }
+               style:{
+                 .direction = CKFlexboxDirectionVertical,
+                 .justifyContent = CKFlexboxJustifyContentEnd,
+               }
+               children:{
+                 {[CKComponent newWithView:{} size:{.width = 300, .height = 100}]},
+                 {[CKComponent newWithView:{} size:{.width = 300, .height = 100}]},
+                 {[CKFlexboxComponentWithDealloc
+                   newWithView:{}
+                   size:{
+                     .width = 300,
+                     .height = 100,
+                   }
+                   style:{
+                     .direction = CKFlexboxDirectionHorizontal,
+                     .justifyContent = CKFlexboxJustifyContentEnd,
+                   }
+                   children:{
+                     {[CKComponent newWithView:{} size:{.width = 300, .height = 100}]},
+                     {[CKComponent newWithView:{} size:{.width = 300, .height = 100}]},
+                     {[CKComponent newWithView:{} size:{.width = 300, .height = 100}]}
+                   }]
+                 }
+               }];
+
+    return flexbox;
+  };
+
+  // Build the component hierarchy with the working raneges prediacte.
+  const CKBuildComponentResult result =
+  CKBuildComponent(CKComponentScopeRootWithPredicates(nil, {}, {}), {}, block);
+
+  CKComponentLayout layout = [flexbox layoutThatFits:{} parentSize:{}];
+
+  return flexbox;
 }
 
 @end

@@ -32,7 +32,7 @@
 @interface CKInsetComponent : CKComponent
 
 /** Convenience that calls +newWithView:insets:component: with {} for view. */
-+ (instancetype)newWithInsets:(UIEdgeInsets)insets component:(CKComponent *)child;
++ (instancetype)newWithInsets:(UIEdgeInsets)insets component:(ComponentGenerator)child;
 
 /**
  @param view Passed to CKComponent +newWithView:size:. The view, if any, will extend outside the insets.
@@ -41,6 +41,6 @@
  */
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                      insets:(UIEdgeInsets)insets
-                  component:(CKComponent *)component;
+                  component:(ComponentGenerator)component;
 
 @end

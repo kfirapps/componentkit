@@ -20,49 +20,57 @@
                     context:(QuoteContext *)context
 {
   return [super newWithComponent:
-          [QuoteWithBackgroundComponent
-           newWithBackgroundImage:[context imageNamed:@"LosAngeles"]
-           quoteComponent:
-           [CKInsetComponent
-            newWithInsets:{.top = 70, .bottom = 25, .left = 20, .right = 20}
-            component:
-            [CKFlexboxComponent
-             newWithView:{}
-             size:{}
-             style:{}
-             children:{
-               {
-                 [CKLabelComponent
-                  newWithLabelAttributes:{
-                    .string = text,
-                    .font = [UIFont fontWithName:@"Baskerville" size:30]
-                  }
-                  viewAttributes:{
-                    {@selector(setBackgroundColor:), [UIColor clearColor]},
-                    {@selector(setUserInteractionEnabled:), @NO},
-                  }
-                  size:{ }],
-                 .alignSelf = CKFlexboxAlignSelfCenter
-               },
-               {
-                 // A semi-transparent end quote (") symbol placed below the quote.
-                 [CKInsetComponent
-                  newWithInsets:{.right = 5}
-                  component:
-                  [CKLabelComponent
-                   newWithLabelAttributes:{
-                     .string = @"\u201D",
-                     .color = [UIColor colorWithWhite:1 alpha:0.5],
-                     .font = [UIFont fontWithName:@"Baskerville" size:140]
-                   }
-                   viewAttributes:{
-                     {@selector(setBackgroundColor:), [UIColor clearColor]},
-                     {@selector(setUserInteractionEnabled:), @NO},
-                   }
-                   size:{ }]],
-                 .alignSelf = CKFlexboxAlignSelfEnd, // Right aligned
-               }
-             }]]]];
+          ^{ return
+            [QuoteWithBackgroundComponent
+             newWithBackgroundImage:[context imageNamed:@"LosAngeles"]
+             quoteComponent:
+             ^{ return
+             [CKInsetComponent
+              newWithInsets:{.top = 70, .bottom = 25, .left = 20, .right = 20}
+              component:
+              ^{ return
+              [CKFlexboxComponent
+               newWithView:{}
+               size:{}
+               style:{}
+               children:{
+                 {
+                   [CKLabelComponent
+                    newWithLabelAttributes:{
+                      .string = text,
+                      .font = [UIFont fontWithName:@"Baskerville" size:30]
+                    }
+                    viewAttributes:{
+                      {@selector(setBackgroundColor:), [UIColor clearColor]},
+                      {@selector(setUserInteractionEnabled:), @NO},
+                    }
+                    size:{ }],
+                   .alignSelf = CKFlexboxAlignSelfCenter
+                 },
+                 {
+                   // A semi-transparent end quote (") symbol placed below the quote.
+                   [CKInsetComponent
+                    newWithInsets:{.right = 5}
+                    component:
+                    ^{ return
+                    [CKLabelComponent
+                     newWithLabelAttributes:{
+                       .string = @"\u201D",
+                       .color = [UIColor colorWithWhite:1 alpha:0.5],
+                       .font = [UIFont fontWithName:@"Baskerville" size:140]
+                     }
+                     viewAttributes:{
+                       {@selector(setBackgroundColor:), [UIColor clearColor]},
+                       {@selector(setUserInteractionEnabled:), @NO},
+                     }
+                     size:{ }];}],
+                   .alignSelf = CKFlexboxAlignSelfEnd, // Right aligned
+                 }
+               }];
+              }
+              ];}
+             ];
+          }];
 }
 
 @end

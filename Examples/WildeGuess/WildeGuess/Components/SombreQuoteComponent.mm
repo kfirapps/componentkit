@@ -19,31 +19,37 @@
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
   return [super newWithComponent:
-          [QuoteWithBackgroundComponent
-           newWithBackgroundImage:[context imageNamed:@"MarketStreet"]
-           quoteComponent:
-           [CKInsetComponent
-            newWithInsets:{.top = 40, .left = 30, .bottom = 40, .right = 30}
-            component:
-            [CKFlexboxComponent
-             newWithView:{}
-             size:{}
-             style:{.spacing = 50}
-             children:{
-               {lineComponent()},
-               {[CKLabelComponent
-                 newWithLabelAttributes:{
-                   .string = [text uppercaseString],
-                   .color = [UIColor whiteColor],
-                   .font = [UIFont fontWithName:@"Avenir-Black" size:25]
-                 }
-                 viewAttributes:{
-                   {@selector(setBackgroundColor:), [UIColor clearColor]},
-                   {@selector(setUserInteractionEnabled:), @NO},
-                 }
-                 size:{ }]},
-               {lineComponent()},
-             }]]]];;
+          ^{ return
+            [QuoteWithBackgroundComponent
+             newWithBackgroundImage:[context imageNamed:@"MarketStreet"]
+             quoteComponent:
+             ^{ return
+             [CKInsetComponent
+              newWithInsets:{.top = 40, .left = 30, .bottom = 40, .right = 30}
+              component:
+              ^{ return
+              [CKFlexboxComponent
+               newWithView:{}
+               size:{}
+               style:{.spacing = 50}
+               children:{
+                 {lineComponent()},
+                 {[CKLabelComponent
+                   newWithLabelAttributes:{
+                     .string = [text uppercaseString],
+                     .color = [UIColor whiteColor],
+                     .font = [UIFont fontWithName:@"Avenir-Black" size:25]
+                   }
+                   viewAttributes:{
+                     {@selector(setBackgroundColor:), [UIColor clearColor]},
+                     {@selector(setUserInteractionEnabled:), @NO},
+                   }
+                   size:{ }]},
+                 {lineComponent()},
+               }];}
+              ];
+             }];
+          }];
 }
 
 static CKComponent *lineComponent()

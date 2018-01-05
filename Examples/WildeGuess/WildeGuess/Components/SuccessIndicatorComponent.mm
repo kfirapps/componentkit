@@ -25,64 +25,74 @@
   return [super
           newWithView:{[UIView class]} // Need a view so supercomponent can animate this component.
           component:
-          [CKInsetComponent
-           newWithInsets:{.left = 20, .right = 20}
-           component:
-           [CKCenterLayoutComponent
-            newWithCenteringOptions:CKCenterLayoutComponentCenteringY
-            sizingOptions:CKCenterLayoutComponentSizingOptionMinimumY
-            child:
-            [CKBackgroundLayoutComponent
-             newWithComponent:
-             [CKInsetComponent
-              newWithInsets:{.top = 40, .left = 20, .bottom = 40, .right = 20}
-              component:
-              [CKFlexboxComponent
-               newWithView:{}
-               size:{}
-               style:{
-                 .alignItems = CKFlexboxAlignItemsCenter
-               }
-               children:{
-                 {[CKLabelComponent
-                    newWithLabelAttributes:{
-                      .string = (indicatesSuccess ? @"Yes" : @"No"),
-                      .color = [UIColor whiteColor],
-                      .font = [UIFont fontWithName:@"Cochin-Bold" size:45.0],
-                      .alignment = NSTextAlignmentCenter
-                    }
-                    viewAttributes:{
-                      {@selector(setBackgroundColor:), [UIColor clearColor]},
-                      {@selector(setUserInteractionEnabled:), @NO},
-                    }
-                    size:{ }]
-                 },
-                 {[CKLabelComponent
-                   newWithLabelAttributes:{
-                     .string = (indicatesSuccess ? successText : failureText),
-                     .color = [UIColor whiteColor],
-                     .font = [UIFont fontWithName:@"Cochin" size:20.0],
-                     .alignment = NSTextAlignmentCenter
+          ^{ return
+            [CKInsetComponent
+             newWithInsets:{.left = 20, .right = 20}
+             component:
+             ^{ return
+               [CKCenterLayoutComponent
+                newWithCenteringOptions:CKCenterLayoutComponentCenteringY
+                sizingOptions:CKCenterLayoutComponentSizingOptionMinimumY
+                child:
+                ^{ return
+                  [CKBackgroundLayoutComponent
+                   newWithComponent:
+                   ^{ return
+                     [CKInsetComponent
+                      newWithInsets:{.top = 40, .left = 20, .bottom = 40, .right = 20}
+                      component:
+                      ^{ return
+                        [CKFlexboxComponent
+                         newWithView:{}
+                         size:{}
+                         style:{
+                           .alignItems = CKFlexboxAlignItemsCenter
+                         }
+                         children:{
+                           {[CKLabelComponent
+                             newWithLabelAttributes:{
+                               .string = (indicatesSuccess ? @"Yes" : @"No"),
+                               .color = [UIColor whiteColor],
+                               .font = [UIFont fontWithName:@"Cochin-Bold" size:45.0],
+                               .alignment = NSTextAlignmentCenter
+                             }
+                             viewAttributes:{
+                               {@selector(setBackgroundColor:), [UIColor clearColor]},
+                               {@selector(setUserInteractionEnabled:), @NO},
+                             }
+                             size:{ }]
+                           },
+                           {[CKLabelComponent
+                             newWithLabelAttributes:{
+                               .string = (indicatesSuccess ? successText : failureText),
+                               .color = [UIColor whiteColor],
+                               .font = [UIFont fontWithName:@"Cochin" size:20.0],
+                               .alignment = NSTextAlignmentCenter
+                             }
+                             viewAttributes:{
+                               {@selector(setBackgroundColor:), [UIColor clearColor]},
+                               {@selector(setUserInteractionEnabled:), @NO},
+                             }
+                             size:{ }],
+                             .spacingBefore = 20
+                           }
+                         }];
+                      }];
                    }
-                   viewAttributes:{
-                     {@selector(setBackgroundColor:), [UIColor clearColor]},
-                     {@selector(setUserInteractionEnabled:), @NO},
-                   }
-                   size:{ }],
-                   .spacingBefore = 20
-                 }
-               }]]
-             background:
-             [CKComponent
-              newWithView:{
-                [UIView class],
-                {
-                  {@selector(setBackgroundColor:), color},
-                  {CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), @10.0}
-                }
-              }
-              size:{}]]
-            size:{}]]];
+                   background:
+                   ^{ return
+                     [CKComponent
+                      newWithView:{
+                        [UIView class],
+                        {
+                          {@selector(setBackgroundColor:), color},
+                          {CKComponentViewAttribute::LayerAttribute(@selector(setCornerRadius:)), @10.0}
+                        }
+                      }
+                      size:{}];}];}
+                size:{}];
+             }];
+          }];
 
 }
 
