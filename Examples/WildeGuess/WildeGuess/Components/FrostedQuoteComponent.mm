@@ -33,7 +33,7 @@
                newWithView:{}
                size:{}
                style:{}
-               children:{
+               children:^ChildrenVector{ return {
                  {
                    [CKLabelComponent
                     newWithLabelAttributes:{
@@ -66,7 +66,7 @@
                      size:{ }];}],
                    .alignSelf = CKFlexboxAlignSelfEnd, // Right aligned
                  }
-               }];
+               };}];
               }
               ];}
              ];

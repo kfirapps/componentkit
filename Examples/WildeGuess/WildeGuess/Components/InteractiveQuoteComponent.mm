@@ -51,17 +51,17 @@ static NSString *const oscarWilde = @"Oscar Wilde";
     style:{
       .alignItems = CKFlexboxAlignItemsStretch
     }
-    children:{
-      {[CKOverlayLayoutComponent
-        newWithComponent:[QuoteComponent newWithQuote:quote context:context]
-        overlay:overlay]},
-      {[CKComponent
-        newWithView:{
-          [UIView class],
-          {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
-        }
-        size:{.height = 1/[UIScreen mainScreen].scale}]}
-    }];
+    children:^ChildrenVector{ return {
+     {[CKOverlayLayoutComponent
+       newWithComponent:[QuoteComponent newWithQuote:quote context:context]
+       overlay:overlay]},
+     {[CKComponent
+       newWithView:{
+         [UIView class],
+         {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
+       }
+       size:{.height = 1/[UIScreen mainScreen].scale}]}
+   };}];
    }];
   if (c) {
     c->_overlay = overlay;

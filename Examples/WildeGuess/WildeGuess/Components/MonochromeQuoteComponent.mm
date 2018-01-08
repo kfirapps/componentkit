@@ -42,7 +42,7 @@
    style:{
      .direction = CKFlexboxDirectionHorizontal
    }
-   children:{
+   children:^ChildrenVector{ return {
      {
        // Small dark gray rectangle as a bookmark.
        .component =
@@ -59,7 +59,7 @@
        .flexShrink = 1,
        .flexBasis = CKRelativeDimension::Percent(1.0)
      }
-   }];
+   };}];
 
   return [super newWithComponent:
           ^{ return

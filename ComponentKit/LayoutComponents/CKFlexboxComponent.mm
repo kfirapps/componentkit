@@ -53,12 +53,12 @@ template class std::vector<CKFlexboxComponentChild>;
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
-                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children
+                   children:(ChildrenGenerator)children
 {
   CKFlexboxComponent * const component = [super newWithView:view size:size];
   if (component) {
     component->_style = style;
-    component->_children = children.take();
+    component->_children = children();
   }
   return component;
 }

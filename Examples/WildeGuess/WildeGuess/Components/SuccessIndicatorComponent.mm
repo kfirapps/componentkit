@@ -48,7 +48,7 @@
                          style:{
                            .alignItems = CKFlexboxAlignItemsCenter
                          }
-                         children:{
+                         children:^ChildrenVector{ return {
                            {[CKLabelComponent
                              newWithLabelAttributes:{
                                .string = (indicatesSuccess ? @"Yes" : @"No"),
@@ -76,7 +76,7 @@
                              size:{ }],
                              .spacingBefore = 20
                            }
-                         }];
+                         };}];
                       }];
                    }
                    background:

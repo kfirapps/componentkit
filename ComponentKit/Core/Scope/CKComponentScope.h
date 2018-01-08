@@ -62,6 +62,9 @@ public:
   /** @return The current state for the component being built. */
   id state(void) const noexcept;
 
+  BOOL isBeingUsed(void) const noexcept;
+  void setIsBeingUsed(BOOL isBeingUsed);
+
   /**
    @return A block that schedules a state update when invoked.
    @discussion Usually, prefer the more idiomatic [CKComponent -updateState:mode:]. Use this in the rare case where you
@@ -98,5 +101,6 @@ private:
   CKComponentScope &operator=(const CKComponentScope&) = delete;
   CKThreadLocalComponentScope *_threadLocalScope;
   CKComponentScopeHandle *_scopeHandle;
+  BOOL _isBeingUsed;
   std::unique_ptr<CKComponentContext<CKComponentKeyStorage>> _clearKeys;
 };

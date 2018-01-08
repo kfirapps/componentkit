@@ -308,6 +308,12 @@ extern const struct CKStackComponentLayoutExtraKeys {
   NSString * const hadOverflow;
 } CKStackComponentLayoutExtraKeys;
 
+//typedef CKContainerWrapper<std::vector<CKFlexboxComponentChild>>&& ChildrenVector;
+//typedef CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&(^ChildrenGenerator)();
+
+typedef std::vector<CKFlexboxComponentChild> ChildrenVector;
+typedef std::vector<CKFlexboxComponentChild>(^ChildrenGenerator)();
+
 /**
  A simple layout component that stacks a list of children vertically or horizontally.
  
@@ -339,6 +345,6 @@ extern const struct CKStackComponentLayoutExtraKeys {
 + (instancetype)newWithView:(const CKComponentViewConfiguration &)view
                        size:(const CKComponentSize &)size
                       style:(const CKFlexboxComponentStyle &)style
-                   children:(CKContainerWrapper<std::vector<CKFlexboxComponentChild>> &&)children;
+                   children:(ChildrenGenerator)children;
 
 @end

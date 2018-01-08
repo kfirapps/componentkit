@@ -32,7 +32,7 @@
                newWithView:{}
                size:{}
                style:{.spacing = 50}
-               children:{
+               children:^ChildrenVector{ return {
                  {lineComponent()},
                  {[CKLabelComponent
                    newWithLabelAttributes:{
@@ -46,7 +46,7 @@
                    }
                    size:{ }]},
                  {lineComponent()},
-               }];}
+               };}];}
               ];
              }];
           }];
