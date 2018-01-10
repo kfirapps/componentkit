@@ -90,10 +90,10 @@ struct CKComponentMountInfo {
   NSString *identifier = CKThreadLocalComponentIdentifier::currentIdentifier()->nextIdentifier([self class]);
 
   if (self = [super init]) {
+    _identifier = identifier;
     _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
     _viewConfiguration = view;
     _size = size;
-    _identifier = identifier;
   }
   return self;
 }
@@ -102,6 +102,11 @@ struct CKComponentMountInfo {
 {
   // Since the component and its view hold strong references to each other, this should never happen!
   CKAssert(_mountInfo == nullptr, @"%@ must be unmounted before dealloc", [self class]);
+}
+
+- (NSString *)identifier
+{
+  return _identifier;
 }
 
 - (const CKComponentViewConfiguration &)viewConfiguration

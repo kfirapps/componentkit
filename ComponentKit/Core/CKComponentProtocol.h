@@ -18,4 +18,6 @@
 
 + (Class<CKComponentControllerProtocol>)controllerClass;
 
+- (NSString *)identifier;
+
 @end
