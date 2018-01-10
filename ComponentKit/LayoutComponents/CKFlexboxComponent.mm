@@ -17,6 +17,7 @@
 #import "CKInternalHelpers.h"
 #import "CKComponentLayout.h"
 #import "CKComponentLayoutBaseline.h"
+#import "CKThreadLocalComponentScope.h"
 
 const struct CKStackComponentLayoutExtraKeys CKStackComponentLayoutExtraKeys = {
   .hadOverflow = @"hadOverflow"
@@ -56,10 +57,18 @@ template class std::vector<CKFlexboxComponentChild>;
                    children:(ChildrenGenerator)children
 {
   CKFlexboxComponent * const component = [super newWithView:view size:size];
+
+  /** Update the Component Identifier stack before creating a child */
+  CKThreadLocalComponentIdentifier::currentIdentifier()->pushComponentIdentifier(component.identifier);
+
   if (component) {
     component->_style = style;
     component->_children = children();
   }
+
+  /** Pop the child identifier */
+  CKThreadLocalComponentIdentifier::currentIdentifier()->popComponentIdentifier();
+
   return component;
 }
 

@@ -34,3 +34,20 @@ public:
 private:
   CKThreadLocalComponentScope *const previousScope;
 };
+
+class CKThreadLocalComponentIdentifier {
+public:
+  CKThreadLocalComponentIdentifier();
+  ~CKThreadLocalComponentIdentifier();
+
+  /** Returns nullptr if there isn't a current identifier */
+  static CKThreadLocalComponentIdentifier *currentIdentifier() noexcept;
+
+  void pushComponentIdentifier(NSString*);
+  void popComponentIdentifier();
+  NSString* nextIdentifier(Class);
+
+  std::stack<NSString*> stack;
+private:
+  std::stack<NSUInteger> counterStack;
+};

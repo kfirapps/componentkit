@@ -54,6 +54,8 @@ struct CKComponentMountInfo {
 
   /** Only non-null while mounted. */
   std::unique_ptr<CKComponentMountInfo> _mountInfo;
+
+  NSString *_identifier;
 }
 
 #if DEBUG
@@ -85,10 +87,13 @@ struct CKComponentMountInfo {
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const CKComponentSize &)size
 {
+  NSString *identifier = CKThreadLocalComponentIdentifier::currentIdentifier()->nextIdentifier([self class]);
+
   if (self = [super init]) {
     _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
     _viewConfiguration = view;
     _size = size;
+    _identifier = identifier;
   }
   return self;
 }

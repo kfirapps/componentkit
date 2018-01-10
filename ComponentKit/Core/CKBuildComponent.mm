@@ -23,6 +23,7 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
 {
   CKCAssertNotNil(componentFactory, @"Must have component factory to build a component");
   CKThreadLocalComponentScope threadScope(previousRoot, stateUpdates);
+  CKThreadLocalComponentIdentifier componentIdentifier;
   // Order of operations matters, so first store into locals and then return a struct.
   CKComponent *const component = componentFactory();
   return {

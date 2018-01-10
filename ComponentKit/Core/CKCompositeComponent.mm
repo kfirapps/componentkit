@@ -16,6 +16,7 @@
 #import "CKInternalHelpers.h"
 #import "CKComponentInternal.h"
 #import "CKComponentSubclass.h"
+#import "CKThreadLocalComponentScope.h"
 
 @interface CKCompositeComponent ()
 {
@@ -53,9 +54,17 @@
   }
 
   CKCompositeComponent *c = [super newWithView:view size:{}];
+
+  /** Update the Component Identifier stack before creating a child */
+  CKThreadLocalComponentIdentifier::currentIdentifier()->pushComponentIdentifier(c.identifier);
+
   if (c) {
     c->_component = component();
   }
+
+  /** Pop the child identifier */
+  CKThreadLocalComponentIdentifier::currentIdentifier()->popComponentIdentifier();
+
   return c;
 }
 

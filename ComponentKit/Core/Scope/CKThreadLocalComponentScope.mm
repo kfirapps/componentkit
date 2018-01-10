@@ -48,3 +48,58 @@ CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
   CKCAssert(keys.size() == 1 && keys.top().empty(), @"Expected keys to be at initial state in destructor");
   pthread_setspecific(_threadKey(), previousScope);
 }
+
+/** CKThreadLocalComponentIdentifier */
+
+static pthread_key_t _threadIdentifierKey() noexcept
+{
+  static pthread_key_t thread_key;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    (void)pthread_key_create(&thread_key, nullptr);
+  });
+  return thread_key;
+}
+
+CKThreadLocalComponentIdentifier *CKThreadLocalComponentIdentifier::currentIdentifier() noexcept
+{
+  return (CKThreadLocalComponentIdentifier *)pthread_getspecific(_threadIdentifierKey());
+}
+
+CKThreadLocalComponentIdentifier::CKThreadLocalComponentIdentifier()
+: stack(), counterStack()
+{
+  stack.push(@"");
+  counterStack.push(0);
+  pthread_setspecific(_threadIdentifierKey(), this);
+}
+
+void CKThreadLocalComponentIdentifier::pushComponentIdentifier(NSString *identifier)
+{
+  NSString *top = currentIdentifier()->stack.top();
+  currentIdentifier()->stack.push([top stringByAppendingFormat:@"%@-",identifier]);
+  counterStack.push(0);
+}
+
+void CKThreadLocalComponentIdentifier::popComponentIdentifier()
+{
+  counterStack.pop();
+  stack.pop();
+}
+
+NSString* CKThreadLocalComponentIdentifier::nextIdentifier(Class klass)
+{
+  NSUInteger topCounter = counterStack.top();
+  topCounter++;
+  counterStack.pop();
+  counterStack.push(topCounter);
+  NSString *topIdentifier = [NSString stringWithFormat:@"%@%ld",stack.top(),topCounter];
+  return topIdentifier;
+}
+
+CKThreadLocalComponentIdentifier::~CKThreadLocalComponentIdentifier()
+{
+  stack.pop();
+  counterStack.pop();
+  CKCAssert(stack.empty(), @"Didn't expect stack to contain anything in destructor");
+}
