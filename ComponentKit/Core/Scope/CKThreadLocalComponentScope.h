@@ -30,7 +30,7 @@ public:
   const CKComponentStateUpdateMap stateUpdates;
   std::stack<CKComponentScopeFramePair> stack;
   std::stack<std::vector<id<NSObject>>> keys;
-
+  NSMapTable<NSString*, id> *scopeHandlesMap;
 private:
   CKThreadLocalComponentScope *const previousScope;
 };
@@ -45,9 +45,14 @@ public:
 
   void pushComponentIdentifier(NSString*);
   void popComponentIdentifier();
-  NSString* nextIdentifier(Class);
+  NSString* nextComponentIdentifier(Class componentClass, BOOL forState);
 
   std::stack<NSString*> stack;
 private:
-  std::stack<NSUInteger> counterStack;
+  std::stack<NSMapTable<Class, NSNumber*>*> classLevelStack;
+  NSMapTable<Class, NSNumber*> *classTypeMap;
+  NSUInteger classTypeCounter;
+  Class lastClass;
+
+  NSString* classTypeIdentifier(Class componentClass);
 };

@@ -20,4 +20,6 @@
 
 - (NSString *)identifier;
 
++ (id)state;
+
 @end

@@ -29,7 +29,7 @@
  handle corresponding to the current scope. Otherwise it returns nil.
  This is only meant to be called when constructing a component and as part of the implementation itself.
  */
-+ (instancetype)handleForComponent:(id<CKComponentProtocol>)component;
++ (instancetype)handleForComponent:(id<CKComponentProtocol>)component componentIdentifier:(NSString*)componentIdentifier;
 
 /** Creates a conceptually brand new scope handle */
 - (instancetype)initWithListener:(id<CKComponentStateListener>)listener
@@ -69,6 +69,7 @@
 @property (nonatomic, readonly) CKComponentScopeHandleIdentifier globalIdentifier;
 @property (nonatomic, readonly, weak) id<CKComponentProtocol> acquiredComponent;
 @property (nonatomic, weak, readonly) CKComponentScopeHandle *parent;
+@property (nonatomic, copy, readonly) NSString *componentIdentifier;
 
 /**
  Provides a responder corresponding with this scope handle. The controller will assert if called before resolution.

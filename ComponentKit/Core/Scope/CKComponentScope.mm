@@ -39,6 +39,8 @@ CKComponentScope::CKComponentScope(Class __unsafe_unretained componentClass, id 
     _threadLocalScope->stack.push({.frame = childPair.frame, .equivalentPreviousFrame = childPair.equivalentPreviousFrame});
     _scopeHandle = childPair.frame.handle;
     _threadLocalScope->keys.push({});
+    // In case that the infra builds the scope, the identifier will be the equivalent of the component identifier.
+    [_threadLocalScope->scopeHandlesMap setObject:_scopeHandle forKey:identifier];
   }
 }
 

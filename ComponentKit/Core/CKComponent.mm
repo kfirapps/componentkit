@@ -87,11 +87,11 @@ struct CKComponentMountInfo {
 - (instancetype)initWithView:(const CKComponentViewConfiguration &)view
                         size:(const CKComponentSize &)size
 {
-  NSString *identifier = CKThreadLocalComponentIdentifier::currentIdentifier()->nextIdentifier([self class]);
+  NSString *componentIdentifier = CKThreadLocalComponentIdentifier::currentIdentifier()->nextComponentIdentifier([self class], NO);
 
   if (self = [super init]) {
-    _identifier = identifier;
-    _scopeHandle = [CKComponentScopeHandle handleForComponent:self];
+    _identifier = componentIdentifier;
+    _scopeHandle = [CKComponentScopeHandle handleForComponent:self componentIdentifier:componentIdentifier];
     _viewConfiguration = view;
     _size = size;
   }
@@ -343,6 +343,28 @@ static void *kRootComponentMountedViewKey = &kRootComponentMountedViewKey;
 + (id)initialState
 {
   return nil;
+}
+
++ (id)state
+{
+  CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
+  if (currentScope == nullptr) {
+    return nil;
+  }
+
+  // Get the component identifier
+  NSString *componentIdentifier = CKThreadLocalComponentIdentifier::currentIdentifier()->nextComponentIdentifier([self class], YES);
+
+  // Check if we already have a scope.
+  CKComponentScopeHandle *handle = currentScope->stack.top().frame.handle;
+  if ([handle.componentIdentifier isEqualToString:componentIdentifier]) {
+    return handle.state;
+  }
+
+  // In case that the component didn't define a `CKComponentScope`, and the base factory method hasn't been called we will create it here.
+//  NSLog(@"+ (id)state: %@",componentIdentifier);
+  CKComponentScope scope(self, componentIdentifier);
+  return scope.scopeHandle().state;
 }
 
 #pragma mark - State

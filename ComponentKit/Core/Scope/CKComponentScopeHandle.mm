@@ -35,7 +35,7 @@
   CKScopedResponder *_scopedResponder;
 }
 
-+ (CKComponentScopeHandle *)handleForComponent:(id<CKComponentProtocol>)component
++ (CKComponentScopeHandle *)handleForComponent:(id<CKComponentProtocol>)component componentIdentifier:(NSString*)componentIdentifier
 {
   CKThreadLocalComponentScope *currentScope = CKThreadLocalComponentScope::currentScope();
   if (currentScope == nullptr) {
@@ -48,8 +48,17 @@
     return handle;
   }
 
-  CKComponentScope scope([component class], component.identifier);
-  handle = currentScope->stack.top().frame.handle;
+  // Check if the handle has been saved in the scopeHandlesMap (in case the scope was created by the infra);
+  handle = [currentScope->scopeHandlesMap objectForKey:[component identifier]];
+  if ([handle acquireFromComponent:component]) {
+    [currentScope->newScopeRoot registerComponent:component];
+    return handle;
+  }
+
+  // In case that the component didn't define a `CKComponentScope`, we will create it one for it.
+//  NSLog(@"Scope Handle: %@",componentIdentifier);
+  CKComponentScope scope([component class], componentIdentifier);
+  handle = scope.scopeHandle();
   if ([handle acquireFromComponent:component]) {
     [currentScope->newScopeRoot registerComponent:component];
     return handle;
@@ -99,6 +108,8 @@
 
     _scopedResponder = scopedResponder;
     [scopedResponder addHandleToChain:self];
+    
+    _componentIdentifier = [CKThreadLocalComponentIdentifier::currentIdentifier()->nextComponentIdentifier(componentClass, YES) copy];
   }
   return self;
 }

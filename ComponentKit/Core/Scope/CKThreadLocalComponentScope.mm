@@ -39,6 +39,7 @@ CKThreadLocalComponentScope::CKThreadLocalComponentScope(CKComponentScopeRoot *p
   stack.push({[newScopeRoot rootFrame], [previousScopeRoot rootFrame]});
   keys.push({});
   pthread_setspecific(_threadKey(), this);
+  scopeHandlesMap = [NSMapTable strongToWeakObjectsMapTable];
 }
 
 CKThreadLocalComponentScope::~CKThreadLocalComponentScope()
@@ -67,39 +68,61 @@ CKThreadLocalComponentIdentifier *CKThreadLocalComponentIdentifier::currentIdent
 }
 
 CKThreadLocalComponentIdentifier::CKThreadLocalComponentIdentifier()
-: stack(), counterStack()
+: stack(), classLevelStack()
 {
   stack.push(@"");
-  counterStack.push(0);
+  classLevelStack.push([NSMapTable weakToStrongObjectsMapTable]);
+  classTypeMap = [NSMapTable weakToStrongObjectsMapTable];
+  classTypeCounter = 0;
   pthread_setspecific(_threadIdentifierKey(), this);
 }
 
 void CKThreadLocalComponentIdentifier::pushComponentIdentifier(NSString *identifier)
 {
   NSString *top = currentIdentifier()->stack.top();
-  currentIdentifier()->stack.push([top stringByAppendingFormat:@"%@-",identifier]);
-  counterStack.push(0);
+  currentIdentifier()->stack.push([top stringByAppendingFormat:@"%@.",identifier]);
+  classLevelStack.push([NSMapTable weakToStrongObjectsMapTable]);
+  lastClass = nil;
 }
 
 void CKThreadLocalComponentIdentifier::popComponentIdentifier()
 {
-  counterStack.pop();
+  classLevelStack.pop();
   stack.pop();
 }
 
-NSString* CKThreadLocalComponentIdentifier::nextIdentifier(Class klass)
+NSString* CKThreadLocalComponentIdentifier::nextComponentIdentifier(Class componentClass, BOOL forState)
 {
-  NSUInteger topCounter = counterStack.top();
-  topCounter++;
-  counterStack.pop();
-  counterStack.push(topCounter);
-  NSString *topIdentifier = [NSString stringWithFormat:@"%@%ld",stack.top(),topCounter];
-  return topIdentifier;
+  NSMapTable *typeCounterMap = classLevelStack.top();
+  NSUInteger typeCounter = [[typeCounterMap objectForKey:componentClass] integerValue];
+  if (!forState) {
+    typeCounter++;
+    [typeCounterMap setObject:@(typeCounter) forKey:componentClass];
+    lastClass = componentClass;
+  } else {
+    // In case this identifier is being generated for the static state access, we need to check if the last class.
+    if (lastClass != componentClass) {
+      typeCounter++;
+    }
+  }
+  NSString *typeCollisionIdentifier = (typeCounter > 1 ? [NSString stringWithFormat:@",%ld", typeCounter] : @"");
+  NSString *componentIdentifier = [NSString stringWithFormat:@"%@%@%@",stack.top(), classTypeIdentifier(componentClass), typeCollisionIdentifier];
+//  NSLog(@"componentIdentifier:%@",componentIdentifier);
+  return componentIdentifier;
+}
+
+NSString* CKThreadLocalComponentIdentifier::classTypeIdentifier(Class componentClass) {
+  id classTypeIdentifier = [classTypeMap objectForKey:componentClass];
+  if (!classTypeIdentifier) {
+    classTypeIdentifier = @(++classTypeCounter);
+    [classTypeMap setObject:classTypeIdentifier forKey:componentClass];
+  }
+  return [NSString stringWithFormat:@"%@",classTypeIdentifier];
 }
 
 CKThreadLocalComponentIdentifier::~CKThreadLocalComponentIdentifier()
 {
   stack.pop();
-  counterStack.pop();
+  classLevelStack.pop();
   CKCAssert(stack.empty(), @"Didn't expect stack to contain anything in destructor");
 }

@@ -28,8 +28,11 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 + (instancetype)newWithQuote:(Quote *)quote
                      context:(QuoteContext *)context
 {
-  CKComponentScope scope(self);
-  const BOOL revealAnswer = [scope.state() boolValue];
+//  CKComponentScope scope(self);
+//  const BOOL revealAnswer = [scope.state() boolValue];
+
+  // An example how to use the new static method to access the state.
+  const BOOL revealAnswer = [[self state] boolValue];
 
   CKComponent *overlay =
   revealAnswer
