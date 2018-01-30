@@ -47,6 +47,14 @@
     [currentScope->newScopeRoot registerComponent:component];
     return handle;
   }
+
+  static int counter = 0;
+  CKComponentScope scope([component class], @(counter++));
+  if ([handle acquireFromComponent:component]) {
+    [currentScope->newScopeRoot registerComponent:component];
+    return handle;
+  }
+
   CKCAssertNil([component.class controllerClass], @"%@ has a controller but no scope! "
                "Make sure you construct your scope(self) before constructing the component or CKComponentTestRootScope "
                "at the start of the test.", [component class]);

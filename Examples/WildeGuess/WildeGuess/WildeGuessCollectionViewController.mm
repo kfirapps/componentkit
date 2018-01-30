@@ -69,7 +69,7 @@
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   [_dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
-  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:4]];
+  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:1000]];
 }
 
 - (void)_enqueuePage:(QuotesPage *)quotesPage
