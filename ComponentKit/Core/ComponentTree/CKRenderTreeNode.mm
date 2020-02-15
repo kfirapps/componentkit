@@ -49,10 +49,16 @@
   // Transfer the children vector from the reused node.
    _children = node->_children;
 
+  auto const mergeTreeNodesChildren = CKReadGlobalConfig().mergeTreeNodesChildren;
+
   for (auto const &child : _children) {
-    auto childStateKey = std::get<0>(child);
-    if (std::get<1>(childStateKey.nodeKey) % 2 == kTreeNodeParentBaseKey) {
+    auto childKey = std::get<0>(child);
+    if (mergeTreeNodesChildren) {
       [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+    } else {
+      if (std::get<1>(childKey) % 2 == kTreeNodeParentBaseKey) {
+        [std::get<1>(child) didReuseInScopeRoot:scopeRoot fromPreviousScopeRoot:previousScopeRoot];
+      }
     }
   }
 }

@@ -18,6 +18,8 @@
 
 + (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
 {
+  CKComponentScope scope(self);
+  
   return [super newWithComponent:
           [QuoteWithBackgroundComponent
            newWithBackgroundImage:[context imageNamed:@"Powell"]

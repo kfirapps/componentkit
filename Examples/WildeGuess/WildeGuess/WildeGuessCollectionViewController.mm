@@ -73,7 +73,7 @@
     withInsertedSections:[NSIndexSet indexSetWithIndex:0]]
    build];
   [_dataSource applyChangeset:initialChangeset mode:CKUpdateModeAsynchronous userInfo:nil];
-  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:4]];
+  [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:1]];
 }
 
 - (void)_enqueuePage:(QuotesPage *)quotesPage
@@ -118,9 +118,14 @@
 
 static CKComponent *WildeGuessComponentProvider(Quote *quote, QuoteContext *context)
 {
-  return [InteractiveQuoteComponent
+  return CK::FlexboxComponentBuilder()
+  .child([InteractiveQuoteComponent
           newWithQuote:quote
-          context:context];
+          context:context])
+  .child([InteractiveQuoteComponent
+          newWithQuote:quote
+          context:context])
+  .build();
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -131,7 +136,7 @@ static CKComponent *WildeGuessComponentProvider(Quote *quote, QuoteContext *cont
     return;
   }
   if (scrolledToBottomWithBuffer(scrollView.contentOffset, scrollView.contentSize, scrollView.contentInset, scrollView.bounds)) {
-    [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:1]];
+    [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:8]];
   }
 }
 

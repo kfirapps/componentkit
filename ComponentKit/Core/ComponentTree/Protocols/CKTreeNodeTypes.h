@@ -24,7 +24,7 @@ typedef int32_t CKTreeNodeIdentifier;
 #include <unordered_map>
 
 /** A key between a tree ndoe to its parent */
-typedef std::tuple<Class, NSUInteger, id<NSObject>> CKTreeNodeComponentKey;
+typedef std::tuple<Class, NSUInteger, id<NSObject>, std::vector<id<NSObject>>> CKTreeNodeComponentKey;
 /** unordered_set of all the "dirty" tree nodes' identifiers; "dirty" means node on a state update branch. */
 typedef std::unordered_set<CKTreeNodeIdentifier> CKTreeNodeDirtyIds;
 
@@ -43,7 +43,7 @@ namespace CK {
     struct hasher {
       std::size_t operator() (const CKTreeNodeComponentKey &n) const
       {
-        return [std::get<0>(n) hash] ^ std::get<1>(n) ^ [std::get<2>(n) hash];
+        return [std::get<0>(n) hash] ^ std::get<1>(n) ^ [std::get<2>(n) hash] ^ std::get<3>(n).size();
       }
     };
   }
@@ -51,6 +51,5 @@ namespace CK {
 
 /** A map between CKTreeNodeComponentKey to counter; we use it to avoid collisions for identical keys */
 using CKTreeNodeKeyToCounter = std::unordered_map<CKTreeNodeComponentKey, NSUInteger, CK::TreeNode::hasher, CK::TreeNode::comparator>;
-
 
 #endif

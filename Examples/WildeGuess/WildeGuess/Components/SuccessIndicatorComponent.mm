@@ -17,6 +17,8 @@
                             successText:(NSString *)successText
                             failureText:(NSString *)failureText
 {
+  CKComponentScope scope(self);
+
   UIColor *color =
   indicatesSuccess
   ? [UIColor colorWithRed:0.1 green:0.4 blue:0.1 alpha:0.9]

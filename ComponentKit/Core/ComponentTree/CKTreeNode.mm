@@ -30,9 +30,6 @@
 @end
 
 @implementation CKTreeNode
-{
-  CKTreeNodeComponentKey _componentKey;
-}
 
 // Base initializer
 - (instancetype)initWithPreviousNode:(id<CKTreeNodeProtocol>)previousNode
@@ -84,11 +81,13 @@
        previousParent:(id<CKTreeNodeWithChildrenProtocol> _Nullable)previousParent
                params:(const CKBuildComponentTreeParams &)params
 {
-  auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+  if (!CKReadGlobalConfig().mergeTreeNodesChildren) {
+    auto const componentKey = [parent createComponentKeyForChildWithClass:[component class] identifier:nil];
+    _componentKey = componentKey;
+    // Set the link between the parent and the child.
+    [parent setChild:self forComponentKey:_componentKey];
+  }
   _component = component;
-  _componentKey = componentKey;
-  // Set the link between the parent and the child.
-  [parent setChild:self forComponentKey:_componentKey];
   // Register the node-parent link in the scope root (we use it to mark dirty branch on a state update).
   params.scopeRoot.rootNode.registerNode(self, parent);
 #if DEBUG

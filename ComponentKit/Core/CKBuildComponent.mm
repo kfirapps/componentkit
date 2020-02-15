@@ -119,6 +119,8 @@ CKBuildComponentResult CKBuildComponent(CKComponentScopeRoot *previousRoot,
                                            stateUpdates:stateUpdates
                                               component:component
                       enableComponentReuseOptimizations:enableComponentReuseOptimizations];
+
+  
   return {
     .component = component,
     .scopeRoot = newScopeRoot,
