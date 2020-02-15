@@ -15,8 +15,23 @@
 #import "QuoteContext.h"
 
 @implementation MonochromeQuoteComponent
+{
+  NSString *_text;
+  QuoteContext *_context;
+}
 
-+ (instancetype)newWithText:(NSString *)text context:(QuoteContext *)context
++ (instancetype)newWithText:(NSString *)text
+                    context:(QuoteContext *)context
+{
+  auto const c = [super new];
+  if (c) {
+    c->_context = context;
+    c->_text = text;
+  }
+  return c;
+}
+
+- (CKComponent *)render:(id)state
 {
   CKComponent *quoteTextComponent =
   [CKInsetComponent
@@ -24,7 +39,7 @@
    component:
    [CKLabelComponent
     newWithLabelAttributes:{
-      .string = text,
+      .string = _text,
       .color = [UIColor darkGrayColor],
       .font = [UIFont fontWithName:@"HoeflerText-Italic" size:25.0]
     }
@@ -61,23 +76,23 @@
      }
    }];
 
-  return [super newWithComponent:
-          [QuoteWithBackgroundComponent
-           newWithBackgroundImage:[context imageNamed:@"Drops"]
-           quoteComponent:
-           [CKInsetComponent
-            newWithInsets:{.top = 40, .bottom = 40}
-            component:
-            [CKBackgroundLayoutComponent
-             newWithComponent:quoteTextWithBookmarkComponent
-             background:
-             // Add a translucent white background for the text.
-             [CKComponent
-              newWithView:{
-                [UIView class],
-                {{@selector(setBackgroundColor:), [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.7]}}
-              }
-              size:{}]]]]];
+  return
+  [QuoteWithBackgroundComponent
+            newWithBackgroundImage:[_context imageNamed:@"Drops"]
+            quoteComponent:
+            [CKInsetComponent
+             newWithInsets:{.top = 40, .bottom = 40}
+             component:
+             [CKBackgroundLayoutComponent
+              newWithComponent:quoteTextWithBookmarkComponent
+              background:
+              // Add a translucent white background for the text.
+              [CKComponent
+               newWithView:{
+                 [UIView class],
+                 {{@selector(setBackgroundColor:), [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.7]}}
+               }
+               size:{}]]]];
 }
 
 @end

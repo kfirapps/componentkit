@@ -131,7 +131,7 @@ static CKComponent *WildeGuessComponentProvider(Quote *quote, QuoteContext *cont
     return;
   }
   if (scrolledToBottomWithBuffer(scrollView.contentOffset, scrollView.contentSize, scrollView.contentInset, scrollView.bounds)) {
-    [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:8]];
+    [self _enqueuePage:[_quoteModelController fetchNewQuotesPageWithCount:1]];
   }
 }
 

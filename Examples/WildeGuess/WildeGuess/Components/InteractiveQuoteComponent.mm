@@ -23,48 +23,54 @@ static NSString *const oscarWilde = @"Oscar Wilde";
 @implementation InteractiveQuoteComponent
 {
   CKComponent *_overlay;
+  Quote *_quote;
+  QuoteContext *_context;
 }
 
 + (instancetype)newWithQuote:(Quote *)quote
                      context:(QuoteContext *)context
 {
-  CKComponentScope scope(self);
-  const BOOL revealAnswer = [scope.state() boolValue];
+  auto const c = [super new];
+  if (c) {
+    c->_context = context;
+    c->_quote = quote;
+  }
+  return c;
+}
 
-  CKComponent *overlay =
+- (CKComponent *)render:(id)state
+{
+  const BOOL revealAnswer = [state boolValue];
+
+  _overlay =
   revealAnswer
   ? [SuccessIndicatorComponent
-     newWithIndicatesSuccess:[quote.author isEqualToString:oscarWilde]
+     newWithIndicatesSuccess:[_quote.author isEqualToString:oscarWilde]
      successText:[NSString stringWithFormat:@"This quote is by %@", oscarWilde]
      failureText:[NSString stringWithFormat:@"This quote isn't by %@", oscarWilde]]
   : nil;
 
-  InteractiveQuoteComponent *c =
-  [super newWithComponent:
-   [CKFlexboxComponent
-    newWithView:{
-      [UIView class],
-      {CKComponentTapGestureAttribute(@selector(didTap))}
-    }
-    size:{}
-    style:{
-      .alignItems = CKFlexboxAlignItemsStretch
-    }
-    children:{
-      {[CKOverlayLayoutComponent
-        newWithComponent:[QuoteComponent newWithQuote:quote context:context]
-        overlay:overlay]},
-      {[CKComponent
-        newWithView:{
-          [UIView class],
-          {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
-        }
-        size:{.height = 1 / [UIScreen mainScreen].scale}]}
-    }]];
-  if (c) {
-    c->_overlay = overlay;
+  return
+  [CKFlexboxComponent
+  newWithView:{
+    [UIView class],
+    {CKComponentTapGestureAttribute(@selector(didTap))}
   }
-  return c;
+  size:{}
+  style:{
+    .alignItems = CKFlexboxAlignItemsStretch
+  }
+  children:{
+    {[CKOverlayLayoutComponent
+      newWithComponent:[QuoteComponent newWithQuote:_quote context:_context]
+      overlay:_overlay]},
+    {[CKComponent
+      newWithView:{
+        [UIView class],
+        {{@selector(setBackgroundColor:), [UIColor lightGrayColor]}}
+      }
+      size:{.height = 1 / [UIScreen mainScreen].scale}]}
+  }];
 }
 
 + (id)initialState
